@@ -21,6 +21,9 @@ export default function LoginForm() {
     const data = await res.json();
     if (res.ok) {
       setMessage('Login successful');
+      setTimeout(() => {
+        window.location.href = '/dashboard'; // Redirect to dashboard or home page
+      }, 2000);
       localStorage.setItem('token', data.token); // You can use cookies or localStorage
     } else {
       setMessage(data.error || 'Login failed');
@@ -44,7 +47,7 @@ export default function LoginForm() {
         required
       />
       <Button type="submit">Login</Button>
-      {message && <div className="text-red-500 text-sm">{message}</div>}
+      {message && <div className="text-green-500 text-sm">{message}</div>}
     </form>
   );
 }
