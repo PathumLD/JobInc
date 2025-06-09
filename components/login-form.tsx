@@ -23,7 +23,7 @@ export default function LoginForm() {
       setMessage('Login successful');
       setTimeout(() => {
         window.location.href = '/dashboard'; // Redirect to dashboard or home page
-      }, 2000);
+      }, 1000);
       localStorage.setItem('token', data.token); // You can use cookies or localStorage
     } else {
       setMessage(data.error || 'Login failed');
