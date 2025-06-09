@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
-import { createClient } from '@supabase/supabase-js';
+import nodemailer from 'nodemailer';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+function generateOTP() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -16,40 +15,38 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Name, email, and password are required' }, { status: 400 });
     }
 
-    // 1. Register with Supabase Auth
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { data: { name } }
-    });
-    console.log('Supabase signUp data:', data);
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
-    }
-
-    // Check if user already exists
+    // Check if user or pending user exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
-    if (existingUser) {
-      return NextResponse.json({ error: 'Email already registered' }, { status: 400 });
+    const existingPending = await prisma.pendingUser.findUnique({ where: { email } });
+    if (existingUser || existingPending) {
+      return NextResponse.json({ error: 'Email already registered or pending confirmation' }, { status: 400 });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
+    const otp = generateOTP();
 
-    // Create user
-    await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
+    // Save to PendingUser
+    await prisma.pendingUser.create({
+      data: { name, email, password: hashedPassword, otp },
+    });
+
+    // Send OTP email (use your real SMTP config in production)
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS,
       },
     });
 
-    return NextResponse.json(
-      { message: 'Registration successful' }
-    );
-    
+    await transporter.sendMail({
+      from: '"Job App" <iamartseeker@gmail.com>',
+      to: email,
+      subject: "Your OTP Code",
+      text: `Your confirmation code is: ${otp}`,
+    });
+
+    return NextResponse.json({ message: 'OTP sent to email' });
   } catch (error) {
     console.error('Register error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

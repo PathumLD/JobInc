@@ -54,12 +54,12 @@ export default function RegisterForm() {
       const result = await response.json();
 
       if (response.ok) {
-        setMessage({ type: 'success', text: 'Registration successful!' });
+        setMessage({ type: 'success', text: 'OTP Has sent. Check your email!' });
         reset();
         setTimeout(() => {
-          window.location.href = '/login'; 
+          window.location.href = '/verify-email/?email=' + encodeURIComponent(data.email); 
         }
-        , 2000);
+        , 1000);
       } else {
         setMessage({ type: 'error', text: result.error || 'Registration failed' });
       }
