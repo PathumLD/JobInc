@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { signIn } from 'next-auth/react';
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
@@ -48,6 +49,15 @@ export default function LoginForm() {
       />
       <Button type="submit">Login</Button>
       {message && <div className="text-green-500 text-sm">{message}</div>}
+
+      <Button
+        type="button"
+        variant="outline"
+        onClick={() => signIn("google")}
+        className="w-full mt-2"
+      >
+        Sign in with Google
+      </Button>
     </form>
   );
 }
