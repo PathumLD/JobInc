@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export type Job = {
   id: number;
@@ -18,7 +19,9 @@ export default function JobCard({ job }: { job: Job }) {
       <p className="text-gray-600">{job.type}</p>
       <p className="text-gray-500 text-sm">Posted at : {new Date(job.postedAt).toLocaleDateString()}</p>
       <p className="text-gray-500">{job.description}</p>
-      <Button className="mt-2">Apply</Button>
+      <Link href={`/job/${job.id}`}>
+          <Button>Apply</Button>
+        </Link>
     </div>
   );
 }

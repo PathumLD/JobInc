@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import EmployeeHeader from './header';
 import EmployeeSidebar from './sidebar';
+import JobCard from '@/components/public-web/job-card';
 
 // Helper to decode JWT (no external dependency)
 function parseJwt(token: string) {
@@ -98,13 +99,7 @@ export default function DashboardContent() {
               <div className="col-span-full text-center text-gray-500">No jobs found.</div>
             )}
             {filteredJobs.map((job) => (
-              <div key={job.id} className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-xl font-bold mb-2">{job.title}</h3>
-                <p className="text-gray-700 mb-1">{job.company} — {job.location}</p>
-                <p className="text-gray-600 mb-2">{job.type}</p>
-                <p className="text-gray-500 mb-4">{job.description}</p>
-                <Button>Apply</Button>
-              </div>
+              <JobCard key={job.id} job={job} />
             ))}
           </div>
         </main>
