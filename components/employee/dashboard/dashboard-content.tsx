@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import EmployeeHeader from './header';
+import EmployeeSidebar from './sidebar';
 
 // Helper to decode JWT (no external dependency)
 function parseJwt(token: string) {
@@ -70,36 +72,12 @@ export default function DashboardContent() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      {/* Navbar */}
-      <nav className="w-full bg-white shadow px-8 py-4 flex items-center justify-between">
-        <div className="text-2xl font-bold">Job Dashboard</div>
-        <div className="flex items-center gap-4">
-          <span className="text-lg">
-            {userName ? `Welcome ${userName}` : 'Welcome'}
-          </span>
-          <Button variant="outline" onClick={handleLogout}>
-            Logout
-          </Button>
-        </div>
-      </nav>
+      {/* Header */}
+      <EmployeeHeader userName={userName} onLogout={handleLogout} />
 
       <div className="flex flex-1">
         {/* Sidebar */}
-        <aside className="w-64 bg-gray-100 p-6 border-r">
-          <h2 className="font-bold mb-4">Filters</h2>
-          <div className="mb-4">
-            <label className="block mb-2">Job Type</label>
-            <select
-              className="w-full border rounded p-2"
-              value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value)}
-            >
-              <option value="">All</option>
-              <option value="Full-time">Full-time</option>
-              <option value="Part-time">Part-time</option>
-            </select>
-          </div>
-        </aside>
+        <EmployeeSidebar typeFilter={typeFilter} setTypeFilter={setTypeFilter} />
 
         {/* Main Content */}
         <main className="flex-1 p-8">

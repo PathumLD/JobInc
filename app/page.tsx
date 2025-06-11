@@ -1,6 +1,6 @@
-import Header from "@/components/header";
-import HeroCarousel from "@/components/hero-carousel";
-import JobList from "@/components/job-list";
+import Header from "@/components/public-web/header";
+import HeroCarousel from "@/components/public-web/hero-carousel";
+import JobList from "@/components/public-web/job-list";
 
 
 export default function Home() {
