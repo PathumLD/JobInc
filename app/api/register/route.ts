@@ -9,10 +9,10 @@ function generateOTP() {
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, password } = await req.json();
+    const { name, email, password, role } = await req.json();
 
-    if (!email || !password || !name) {
-      return NextResponse.json({ error: 'Name, email, and password are required' }, { status: 400 });
+    if (!email || !password || !name || !role) {
+      return NextResponse.json({ error: 'Name, email, password and role are required' }, { status: 400 });
     }
 
     // Check if user or pending user exists
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
     // Save to PendingUser
     await prisma.pendingUser.create({
-      data: { name, email, password: hashedPassword, otp },
+      data: { name, email, password: hashedPassword, otp, role },
     });
 
     // Send OTP email (use your real SMTP config in production)
@@ -49,6 +49,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: 'OTP sent to email' });
   } catch (error) {
     console.error('Register error:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json({ error: error instanceof Error ? error.message : 'Internal Server Error' }, { status: 500 });
   }
 }

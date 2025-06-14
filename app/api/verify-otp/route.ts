@@ -19,6 +19,7 @@ export async function POST(req: NextRequest) {
         name: pending.name,
         email: pending.email,
         password: pending.password,
+        role: pending.role,
       },
     });
 

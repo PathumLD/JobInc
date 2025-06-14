@@ -21,7 +21,7 @@ const registerSchema = z.object({
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
-export default function RegisterForm() {
+export default function RegisterForm({ role }: { role: string }) {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
@@ -48,6 +48,7 @@ export default function RegisterForm() {
           name: data.name,
           email: data.email,
           password: data.password,
+          role,
         }),
       });
 

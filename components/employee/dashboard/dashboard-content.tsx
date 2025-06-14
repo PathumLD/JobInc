@@ -50,12 +50,14 @@ export default function DashboardContent() {
   const [typeFilter, setTypeFilter] = useState('');
   const [jobs, setJobs] = useState<Job[]>(mockJobs);
   const [userName, setUserName] = useState<string | null>(null);
+  const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       const payload = parseJwt(token);
       setUserName(payload?.name || payload?.email || 'User');
+      setRole(payload?.role || null);
     }
   }, []);
 
@@ -74,7 +76,7 @@ export default function DashboardContent() {
   return (
     <div className="flex min-h-screen flex-col">
       {/* Header */}
-      <EmployeeHeader userName={userName} onLogout={handleLogout} />
+      <EmployeeHeader userName={userName} role={role} onLogout={handleLogout} />
 
       <div className="flex flex-1">
         {/* Sidebar */}
